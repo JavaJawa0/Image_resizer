@@ -44,8 +44,7 @@ if uploaded_file is not None:
         # Százalékos megtakarítás kiszámítása
         reduction = 100 - (compressed_size / original_size * 100)
 
-        st.metric("Becsült új méret", f"{compressed_size:.2f} MB", f"-{reduction:.1d}%")
-
+        st.metric("Becsült új méret", f"{compressed_size:.2f} MB", f"-{int(reduction)}%")
         st.download_button(
             label="✨ Tömörített kép letöltése",
             data=compressed_data,
