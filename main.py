@@ -8,42 +8,23 @@ import streamlit as st
 
 # --- KIBŐVÍTETT STÍLUS ÉS LÁTHATÓSÁG BEÁLLÍTÁSA ---
 st.markdown(
-    f"""
+    """
     <style>
-    /* A teljes háttér beállítása a beküldött színre */
-    .stApp {{
-        background-color: #fedcba;
-    }}
+    /* A feltöltő zónán belüli összes szöveg (fájltípusok, méretlimit) fehérre állítása */
+    [data-testid="stFileUploadDropzone"] div {
+        color: white !important;
+    }
 
-    /* Globális szövegszín sötétbarnára, hogy olvasható legyen */
-    h1, h2, h3, h4, h5, h6, p, label, .stMarkdown, .css-145kmo2 {{
-        color: #4a3a2a !important;
-    }}
+    /* Kifejezetten a feltöltő gomb feliratának fehérítése */
+    [data-testid="stFileUploadDropzone"] button {
+        color: white !important;
+        border-color: white !important;
+    }
 
-    /* --- FELTÖLTŐ GOMB STÍLUSÁNAK JAVÍTÁSA --- */
-
-    /* A teljes feltöltő konténer hátterének világosítása */
-    [data-testid="stFileUploadDropzone"] {{
-        background-color: rgba(255, 255, 255, 0.5) !important; /* Átlátszó fehér */
-        border: 2px dashed #4a3a2a !important; /* Sötétbarna szaggatott keret */
-        border-radius: 10px;
-    }}
-
-    /* A feltöltő gomb szövege és ikonja sötétbarnára */
-    [data-testid="stFileUploadDropzone"] .css-839znt,
-    [data-testid="stFileUploadDropzone"] .css-1q8dd3e {{
-        color: #4a3a2a !important;
-    }}
-
-    /* A fájlméret-korlát szöveg sötétbarnára */
-    [data-testid="stFileUploadDropzone"] .css-uf99v8 {{
-        color: #4a3a2a !important;
-    }}
-
-    /* A feltöltött fájl nevét mutató szöveg sötétbarnára */
-    [data-testid="stFileUploadDropzone"] .css-1vb5vb5 {{
-        color: #4a3a2a !important;
-    }}
+    /* Az ikon (felhő/feltöltés ikon) fehérítése */
+    [data-testid="stFileUploadDropzone"] svg {
+        fill: white !important;
+    }
     </style>
     """,
     unsafe_allow_html=True
