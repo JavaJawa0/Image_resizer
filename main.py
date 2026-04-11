@@ -6,24 +6,47 @@ import os
 
 import streamlit as st
 
-# --- KIBŐVÍTETT STÍLUS ÉS LÁTHATÓSÁG BEÁLLÍTÁSA ---
+import streamlit as st
+
+# --- AZ ÖSSZES STÍLUS EGYBEN (HÁTTÉR + FEHÉR SZÖVEG) ---
 st.markdown(
     """
     <style>
-    /* A feltöltő zónán belüli összes szöveg (fájltípusok, méretlimit) fehérre állítása */
-    [data-testid="stFileUploadDropzone"] div {
+    /* 1. A FIX NEON BEIGE HÁTTÉR */
+    .stApp {
+        background-color: #fedcba !important;
+    }
+
+    /* 2. A FELTÖLTŐ ZÓNA SÖTÉTÍTÉSE (hogy látszódjon a fehér szöveg) */
+    [data-testid="stFileUploadDropzone"] {
+        background-color: #262730 !important; /* Sötétszürke kártya */
+        border: 2px dashed #4a3a2a !important;
+        border-radius: 15px;
+    }
+
+    /* 3. A FELTÖLTŐ SZÖVEGEK FEHÉRRE ÁLLÍTÁSA */
+    /* Ez vonatkozik az 'Upload' feliratra, a típusokra és a limitre is */
+    [data-testid="stFileUploadDropzone"] div, 
+    [data-testid="stFileUploadDropzone"] label, 
+    [data-testid="stFileUploadDropzone"] span,
+    [data-testid="stFileUploadDropzone"] p {
         color: white !important;
     }
 
-    /* Kifejezetten a feltöltő gomb feliratának fehérítése */
+    /* 4. A FELTÖLTÉS IKON FEHÉRÍTÉSE */
+    [data-testid="stFileUploadDropzone"] svg {
+        fill: white !important;
+    }
+
+    /* 5. A FELTÖLTŐ GOMB KERETE ÉS SZÖVEGE */
     [data-testid="stFileUploadDropzone"] button {
         color: white !important;
         border-color: white !important;
     }
 
-    /* Az ikon (felhő/feltöltés ikon) fehérítése */
-    [data-testid="stFileUploadDropzone"] svg {
-        fill: white !important;
+    /* 6. A FŐCÍMEK ÉS EGYÉB SZÖVEGEK SZÍNE (opcionális sötétbarna) */
+    h1, h2, h3, p {
+        color: #4a3a2a;
     }
     </style>
     """,
