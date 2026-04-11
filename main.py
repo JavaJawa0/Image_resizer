@@ -4,6 +4,17 @@ import pillow_heif
 import io
 import os
 
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #2E2E2E;  /* Itt írd át a színt, pl. sötétszürkére */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # HEIC támogatás regisztrálása
 pillow_heif.register_heif_opener()
 
