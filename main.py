@@ -7,8 +7,21 @@ import os
 st.markdown(
     """
     <style>
+    /* A teljes háttér beállítása a beküldött színre */
     .stApp {
-        background-color: #2E2E2E;  /* Itt írd át a színt, pl. sötétszürkére */
+        background-color: #fedcba;
+    }
+
+    /* Opcionális: A kártyák és beviteli mezők stílusa, hogy ne üssenek el */
+    .stFileUploader, .stSlider, .stMetric {
+        background-color: rgba(255, 255, 255, 0.2); /* Félig átlátszó fehér */
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    /* A betűk színe, hogy jól olvasható legyen ezen a színen */
+    h1, h2, h3, p, label {
+        color: #4a3a2a !important; /* Egy sötétbarna árnyalat */
     }
     </style>
     """,
