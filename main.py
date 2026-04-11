@@ -8,7 +8,6 @@ import streamlit as st
 
 import streamlit as st
 
-# --- AZ ÖSSZES STÍLUS EGYBEN (HÁTTÉR + FEHÉR SZÖVEG) ---
 st.markdown(
     """
     <style>
@@ -17,31 +16,32 @@ st.markdown(
         background-color: #fedcba !important;
     }
 
-    /* 2. Feltöltő doboz sötétítése és stílusa */
+    /* 2. A FELIRAT (amit beküldtél a képen) SÖTÉTBARNÁRA ÁLLÍTÁSA */
+    /* Ez a 'Válassz ki egy képet...' rész */
+    [data-testid="stFileUploader"] label {
+        color: #4a3a2a !important;
+        font-weight: bold !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* 3. Feltöltő doboz stílusa (marad sötét, hogy a belső tartalom látszódjon) */
     [data-testid="stFileUploadDropzone"] {
         background-color: #262730 !important;
         border: 2px dashed #4a3a2a !important;
         border-radius: 15px;
     }
 
-    /* 3. ATOMBIZTOS FEHÉR SZÖVEG (mindenre a dobozon belül) */
-    /* Ez eléri a gombot, a kisbetűs részt és a leírást is */
+    /* 4. A dobozon BELÜLI dolgok maradjanak fehérek a kontraszt miatt */
     [data-testid="stFileUploadDropzone"] * {
         color: white !important;
     }
 
-    /* 4. Az ikon kényszerített fehérítése */
     [data-testid="stFileUploadDropzone"] svg path {
         fill: white !important;
     }
 
-    /* 5. A gomb körüli keret fehérítése (ha van) */
-    [data-testid="stFileUploadDropzone"] button {
-        border-color: white !important;
-    }
-
-    /* 6. A címsorok sötétbarnája, hogy jól látszódjanak a beige háttéren */
-    h1, h2, h3, .stMarkdown p {
+    /* 5. Minden egyéb szöveg az oldalon (címek stb.) */
+    h1, h2, h3, p {
         color: #4a3a2a !important;
     }
     </style>
