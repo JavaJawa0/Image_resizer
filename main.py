@@ -11,38 +11,36 @@ import streamlit as st
 st.markdown(
     """
     <style>
-    /* 1. Háttérszín fixálása */
+    /* 1. Fő háttér */
     .stApp {
         background-color: #fedcba !important;
     }
 
-    /* 2. A FELIRAT (amit beküldtél a képen) SÖTÉTBARNÁRA ÁLLÍTÁSA */
-    /* Ez a 'Válassz ki egy képet...' rész */
-    [data-testid="stFileUploader"] label {
+    /* 2. A külső felirat kényszerítése SÖTÉTBARNÁRA */
+    /* Megcélozzuk az összes létező label-t és szöveget a feltöltő körül */
+    [data-testid="stFileUploader"] label, 
+    [data-testid="stFileUploader"] section p,
+    .stMarkdown p {
         color: #4a3a2a !important;
-        font-weight: bold !important;
-        font-size: 1.1rem !important;
     }
 
-    /* 3. Feltöltő doboz stílusa (marad sötét, hogy a belső tartalom látszódjon) */
+    /* 3. A feltöltő doboz belseje */
     [data-testid="stFileUploadDropzone"] {
-        background-color: #262730 !important;
+        background-color: #262730 !important; /* Maradjon sötét a kontraszt miatt */
         border: 2px dashed #4a3a2a !important;
-        border-radius: 15px;
     }
 
-    /* 4. A dobozon BELÜLI dolgok maradjanak fehérek a kontraszt miatt */
-    [data-testid="stFileUploadDropzone"] * {
+    /* 4. A dobozon belüli szövegek kényszerítése FEHÉRRE */
+    /* Ha itt is sötétet látsz, akkor a '*' nem volt elég erős */
+    [data-testid="stFileUploadDropzone"] div,
+    [data-testid="stFileUploadDropzone"] span,
+    [data-testid="stFileUploadDropzone"] small {
         color: white !important;
     }
 
-    [data-testid="stFileUploadDropzone"] svg path {
-        fill: white !important;
-    }
-
-    /* 5. Minden egyéb szöveg az oldalon (címek stb.) */
-    h1, h2, h3, p {
-        color: #4a3a2a !important;
+    /* 5. Az Upload felirat a gombon belül */
+    [data-testid="stFileUploadDropzone"] button div p {
+        color: white !important;
     }
     </style>
     """,
