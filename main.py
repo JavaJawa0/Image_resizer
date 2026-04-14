@@ -2,72 +2,81 @@ import streamlit as st
 from PIL import Image
 import pillow_heif
 import io
-import os
 
-import streamlit as st
+# HEIC támogatás regisztrálása
+pillow_heif.register_heif_opener()
 
-import streamlit as st
+# --- OLDAL BEÁLLÍTÁSAI ---
+st.set_page_config(page_title="JavaJawa Pic Compressor", page_icon="🖼️")
 
+# --- CSS STÍLUSOK (Neon Beige & Pacek UI) ---
 st.markdown(
     """
     <style>
-    /* 1. Fő háttér */
+    /* 1. Fő háttér: Neon Beige (#fedcba) */
     .stApp {
         background-color: #fedcba !important;
     }
 
-    /* 2. A külső felirat kényszerítése SÖTÉTBARNÁRA */
-    /* Megcélozzuk az összes létező label-t és szöveget a feltöltő körül */
-    [data-testid="stFileUploader"] label, 
-    [data-testid="stFileUploader"] section p,
-    .stMarkdown p {
+    /* 2. Címek és szövegek: Sötétbarna */
+    h1, h2, h3, p, label, .stMarkdown {
         color: #4a3a2a !important;
     }
 
-    /* 3. A feltöltő doboz belseje */
+    /* 3. Feltöltő doboz stílusa */
     [data-testid="stFileUploadDropzone"] {
-        background-color: #262730 !important; /* Maradjon sötét a kontraszt miatt */
+        background-color: #262730 !important; /* Sötét sáv */
         border: 2px dashed #4a3a2a !important;
+        border-radius: 15px;
     }
 
-    /* 4. A dobozon belüli szövegek kényszerítése FEHÉRRE */
-    /* Ha itt is sötétet látsz, akkor a '*' nem volt elég erős */
-    [data-testid="stFileUploadDropzone"] div,
-    [data-testid="stFileUploadDropzone"] span,
-    [data-testid="stFileUploadDropzone"] small {
+    /* 4. Feltöltő dobozon belüli szövegek és gomb: FEHÉR */
+    [data-testid="stFileUploadDropzone"] * {
         color: white !important;
     }
 
-    /* 5. Az Upload felirat a gombon belül */
-    [data-testid="stFileUploadDropzone"] button div p {
-        color: white !important;
+    [data-testid="stFileUploadDropzone"] svg path {
+        fill: white !important;
+    }
+
+    [data-testid="stFileUploadDropzone"] button {
+        border-color: white !important;
+    }
+
+    /* 5. Csúszka és egyéb widgetek színeinek finomítása */
+    .stSlider label {
+        color: #4a3a2a !important;
+        font-weight: bold;
+    }
+
+    /* 6. Hibaüzenetek olvashatósága */
+    .stAlert p {
+        color: #4a3a2a !important;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
+# --- ALKALMAZÁS LOGIKA ---
 
-# HEIC támogatás regisztrálása
-pillow_heif.register_heif_opener()
-
-st.set_page_config(page_title="Profi Képkomprimáló", page_icon="🖼️")
-
-st.title("🖼️ Képméret Csökkentő & HEIC Konverter")
-st.write("Töltsd fel a képed, állítsd be a tömörítést, és töltsd le JPG-ben!")
+st.title("🖼️ JavaJawa Pic Compressor")
+st.write("Töltsd fel a képet, és hozd ki belőle a legkisebb méretet pacek minőségben!")
 
 uploaded_file = st.file_uploader("Válassz ki egy képet (JPG, PNG, HEIC)", type=["jpg", "jpeg", "png", "heic"])
 
 if uploaded_file is not None:
-    # Eredeti méret kiszámítása megabájtban
+    # Eredeti fájlméret kiszámítása
     original_size = uploaded_file.size / (1024 * 1024)
 
-    # Kép megnyitása és konvertálása
+    # Kép megnyitása
     image = Image.open(uploaded_file)
-    if uploaded_file.name.lower().endswith(".heic"):
-        image = image.convert("RGB")
-        st.info("🍎 HEIC formátum észlelve - Átalakítás JPG-re...")
 
+    # Automatikus HEIC felismerés és konverzió
+    if uploaded_file.name.lower().endswith(".heic"):
+        st.info("🍎 Apple HEIC formátum észlelve - Konvertálás...")
+
+    # Megjelenítés két oszlopban
     col1, col2 = st.columns(2)
 
     with col1:
@@ -75,27 +84,37 @@ if uploaded_file is not None:
 
     with col2:
         st.subheader("Beállítások")
-        # A csúszka: itt állítja be a felhasználó a tömörítés mértékét
-        # A 100-as minőség a legkisebb tömörítés, az 1-es a legnagyobb.
-        quality = st.slider("Célzott minőség (Minél kisebb, annál jobb tömörítés)", 1, 100, 70)
 
-        # Mentés memóriába a kiválasztott minőséggel
+        # Minőség csúszka
+        quality = st.slider("Tömörítés mértéke (Minőség)", 1, 100, 75)
+
+        # TÖMÖRÍTÉS FOLYAMATA
         buf = io.BytesIO()
-        image.save(buf, format="JPEG", quality=quality, optimize=True)
+
+        # KRITIKUS JAVÍTÁS: Mindig RGB-be konvertálunk mentés előtt (megoldja az OSError-t)
+        # Ez eltávolítja az átlátszóságot (Alfa csatorna), amit a JPEG nem tud kezelni.
+        rgb_image = image.convert("RGB")
+
+        rgb_image.save(buf, format="JPEG", quality=quality, optimize=True)
         compressed_data = buf.getvalue()
         compressed_size = len(compressed_data) / (1024 * 1024)
 
-        # Százalékos megtakarítás kiszámítása
+        # Százalékos megtakarítás
         reduction = 100 - (compressed_size / original_size * 100)
 
-        st.metric("Becsült új méret", f"{compressed_size:.2f} MB", f"-{int(reduction)}%")
+        # Eredmény mutatása
+        st.metric("Becsült új méret", f"{compressed_size:.2f} MB", f"-{reduction:.1f}%")
+
+        # Letöltés gomb
         st.download_button(
             label="✨ Tömörített kép letöltése",
             data=compressed_data,
-            file_name="tomoritett_kep.jpg",
+            file_name="JavaJawa_compressed.jpg",
             mime="image/jpeg",
             use_container_width=True
         )
 
     if reduction > 0:
-        st.success(f"Siker! A kép méretét {reduction:.1f}%-kal csökkentetted.")
+        st.success(f"Pacek! A fájlméret {reduction:.1f}%-kal lett kisebb.")
+    else:
+        st.warning("A jelenlegi beállításokkal a fájlméret nem csökkent. Próbálj alacsonyabb minőséget!")
